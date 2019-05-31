@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static', filename='img/favicon.ico')}}"
+    />
+    <title>Tigo Pesa - Test</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/style.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/switch.css')}}"
+    />
+  </head>
+
+  <body>
+    <div class=" container">
+      <header>
+        <h1>Ussd Menu Builder</h1>
+      </header>
+      <section>
+        <div class="editor-wrap">
+          <div id="toolbar"></div>
+          <div id="menu">
+            <div id="editor"></div>
+            <div id="props"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <button id="reset">
+            Reset
+          </button>
+          <button id="saveMenu" type="submit">
+            Save Menu
+          </button>
+        </div>
+        <span class="version">v1.0.1</span>
+      </section>
+    </div>
+    <div id="overlay">
+      <img
+        src="{{ url_for('static', filename='img/loading2.gif') }}"
+        alt="Loading.."
+        class="loading"
+      />
+    </div>
+    <script src="{{url_for('static', filename='js/Menu.js')}}"></script>
+    <script src="{{url_for('static', filename='js/app.js')}}"></script>
+  </body>
+</html>
