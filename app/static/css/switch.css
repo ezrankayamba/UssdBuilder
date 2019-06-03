@@ -1,90 +1,70 @@
-.onoffswitch {
-  position: relative;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+#switch-wrap {
   display: inline-block;
 }
 
-.onoffswitch.lang .onoffswitch-inner:after {
-  content: "SWA";
+#switch-wrap label {
+  padding: 0 0 !important;
+  background: #e5e5e5;
 }
 
-.onoffswitch.lang .onoffswitch-inner:before {
-  content: "ENG";
-}
-
-.onoffswitch-checkbox {
+#switch-wrap input[type="checkbox"] {
   display: none;
+  margin: 0;
 }
 
-.onoffswitch-label {
+#switch-wrap input[type="checkbox"] + label {
   display: block;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid #999999;
-  border-radius: 10px;
+  width: 4rem;
+  border-radius: 4rem;
 }
 
-.onoffswitch-inner {
-  display: block;
-  width: 200%;
-  margin-left: -100%;
-  -webkit-transition: margin 0.3s ease-in 0s;
-  transition: margin 0.3s ease-in 0s;
+#switch-wrap input[type="checkbox"] + label span {
+  height: 1.1rem;
+  width: 1.1rem;
+  vertical-align: middle;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1px;
 }
 
-.onoffswitch-inner:before,
-.onoffswitch-inner:after {
-  display: block;
-  float: left;
-  width: 50%;
-  height: 16px;
-  padding: 0;
-  line-height: 16px;
-  font-size: 12px;
-  color: white;
-  font-family: Trebuchet, Arial, sans-serif;
-  font-weight: bold;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+#switch-wrap input[type="checkbox"] + label span.text {
+  color: #f0f0f0;
+  left: -19%;
 }
 
-.onoffswitch-inner:before {
-  content: "ON";
-  padding-left: 5px;
-  background-color: #34a7c1;
-  color: #ffffff;
+#switch-wrap input[type="checkbox"] + label span.text:before {
+  content: "ENG";
+  font-size: 90%;
+  border-radius: 8px 0 0 8px;
+  padding-left: 8px;
+  background: #a472ea;
+  padding-right: 16px;
 }
 
-.onoffswitch-inner:after {
-  content: "OFF";
-  padding-right: 5px;
-  background-color: #eeeeee;
-  color: #999999;
-  text-align: right;
-}
-
-.onoffswitch-switch {
-  display: block;
-  width: 14px;
-  margin: 3px;
-  background: #ffffff;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 47px;
-  border: 2px solid #999999;
-  border-radius: 20px;
+#switch-wrap input[type="checkbox"] + label span.switch {
+  background-color: #6200ee;
+  border-radius: 50%;
+  right: -19%;
   -webkit-transition: all 0.3s ease-in 0s;
   transition: all 0.3s ease-in 0s;
 }
 
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-  margin-left: 0;
+#switch-wrap input[type="checkbox"]:not(:checked) + label span.text {
+  left: -4px;
 }
 
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-  right: 0px;
+#switch-wrap input[type="checkbox"]:not(:checked) + label span.text:before {
+  content: "SWA";
+  background: #9b9b9b;
+  border-radius: 0 8px 8px 0;
+  padding-left: 18px;
+  padding-right: 8px;
+}
+
+#switch-wrap input[type="checkbox"]:not(:checked) + label span.switch {
+  -webkit-transition: all 1s linearn 0.3s;
+  transition: all 1s linearn 0.3s;
+  left: -40%;
+  background: #ffffff;
 }
 /*# sourceMappingURL=switch.css.map */

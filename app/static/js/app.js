@@ -73,12 +73,20 @@
             renderRoot(menu)
         })
         btnAdd.textContent = "Add"
-        let lang = crEl('div', 'onoffswitch lang')
-        lang.innerHTML = `<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-        <label class="onoffswitch-label" for="myonoffswitch">
-            <span class="onoffswitch-inner"></span>
-            <span class="onoffswitch-switch"></span>
-        </label>`
+        let lang = crEl('div')
+        lang.id = 'switch-wrap'
+        let check = crEl('input')
+        check.type = 'checkbox'
+        check.id = 'lang'
+        check.checked = true
+        lang.appendChild(check)
+        let langLabel = crEl('label')
+        langLabel.setAttribute('for', 'lang')
+        let span1 = crEl('span', 'text')
+        let span2 = crEl('span', 'switch')
+        langLabel.appendChild(span1)
+        langLabel.appendChild(span2)
+        lang.appendChild(langLabel)
 
         topbar.appendChild(btnBack)
         topbar.appendChild(label)
