@@ -3,16 +3,16 @@
     let ROOT = null;
     const menuTypes = [{
         name: "USSDCODE",
-        label: "Is Ussd Code"
+        label: "Ussd Code"
     }, {
         name: "OPTIONS",
-        label: "Is Menu Otions"
+        label: "Menu Otions"
     }, {
         name: "TEXT",
-        label: "Is Text Input"
+        label: "Text Input"
     }, {
         name: "MESSAGE",
-        label: "Is Text Message"
+        label: "Text Message"
     }];
     const idTracker = {
         id: 0
@@ -70,6 +70,7 @@
             newMenu.id = getSn()
             newMenu.name = 'Untitled'
             menu.menus.push(newMenu)
+            let toolbar = emptyElementById('toolbar')
             renderRoot(menu)
         })
         btnAdd.textContent = "Add"
@@ -97,6 +98,7 @@
     };
     let renderMenu = (menu, newMenu) => {
         let editor = document.getElementById('editor')
+        let toolbar = emptyElementById('toolbar')
         if (menu.menus.length) {
             let sn = 0;
             menu.menus.forEach((m) => {
@@ -126,49 +128,59 @@
                 if (selectedId === m.id) {
                     line.className = 'option active'
 
-                    //props
-                    let props = emptyElementById('props')
-                    let hd = crEl('h3')
-                    hd.textContent = "Menu Type"
-                    props.appendChild(hd)
-                    let updateType = () => {
-                        let val = document.querySelector('input[name="type"]:checked').value;
+                    //Menu Type
+                    let selWrap = crEl('div', 'input-wrap horizontal')
+                    let selLabel = crEl('label')
+                    selLabel.textContent = "Menu Type: "
+                    let updateType = (ev) => {
+                        let val = ev.target.value;
+                        console.log(`Changed: ${val}`)
                         m.type = val
                     }
-
+                    let selType = crEl('select')
                     menuTypes.forEach(t => {
-                        let grp = crEl('div', 'input-group')
-                        let lbl = crEl('label')
-                        let id = t.label.split(" ").join("")
-                        lbl.setAttribute('for', id)
-                        let input = crEl('input')
-                        input.name = 'type'
-                        input.value = t.name
-                        input.id = id
-                        input.type = 'radio'
-                        if (t.name === menu.type) {
-                            input.setAttribute('checked', true)
+                        let opt = crEl('option')
+                        opt.value = t.name
+                        opt.textContent = t.label
+                        if (t.name === m.type) {
+                            console.log(`Type found: ${t.name}`)
+                            opt.selected = true
                         }
-                        input.addEventListener('change', updateType)
-                        lbl.appendChild(input)
-                        let lblSpan = crEl('span')
-                        lblSpan.textContent = t.label
-                        lbl.appendChild(lblSpan)
-                        grp.appendChild(lbl)
-                        props.appendChild(grp)
+                        selType.appendChild(opt)
                     })
+                    selType.addEventListener('change', updateType)
+                    selLabel.appendChild(selType)
+                    selWrap.appendChild(selLabel)
+                    toolbar.appendChild(selWrap)
+
+                    toolbar.appendChild(crInput('input', 'ENG', (ev) => {
+                        let val = ev.target.value
+                        m.eng = val
+                    }, m.eng))
+                    toolbar.appendChild(crInput('input', 'SWA', (ev) => {
+                        let val = ev.target.value
+                        m.swa = val
+                    }, m.swa))
                 }
             })
-
-            if (!selectedId) {
-                emptyElementById('props')
-            }
         } else {
             let line = crEl('div', 'option');
             line.textContent = 'No menu options yet, kindly add!'
             editor.appendChild(line)
         }
     };
+    let crInput = (type, lbl, onChange, value) => {
+        let wrap = crEl('div', 'input-wrap')
+        let label = crEl('label')
+        label.textContent = `${lbl}: `
+        let input = crEl('input')
+        input.type = type
+        input.value = value || ''
+        input.addEventListener('change', onChange)
+        label.appendChild(input)
+        wrap.appendChild(label)
+        return wrap
+    }
     let emptyElement = (el) => {
         while (el.firstChild) {
             el.removeChild(el.firstChild);
