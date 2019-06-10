@@ -219,6 +219,41 @@ div.container section .version {
   border-width: 0 1.2px 1.2px 0;
 }
 
+.editor-wrap #menu #editor .total {
+  clear: both;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  padding: 0.2rem;
+  background: #333;
+  color: #33ff33;
+  margin-top: 8px;
+}
+
+.editor-wrap #menu #editor .total.exceed {
+  color: #ff3333;
+}
+
+.editor-wrap #menu #editor .total span.dummy {
+  width: 2rem;
+}
+
+.editor-wrap #menu #editor .total span.label {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  text-align: left;
+}
+
+.editor-wrap #menu #editor .total span.number {
+  display: inline;
+  padding: 3px;
+  margin: auto 1rem;
+}
+
 div.controls {
   padding: 0.5rem 0.5rem;
   background: #e6e6e6;
@@ -272,5 +307,54 @@ div.controls button#reset {
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
+}
+
+#overlay div.form-wrap {
+  position: absolute;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  top: 30%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  -webkit-box-shadow: 2px 2px 2px 0px #333333;
+  box-shadow: 2px 2px 2px 0px #333333;
+}
+
+#overlay div.form-wrap h3 {
+  margin: 0 0 0.2rem;
+}
+
+#overlay div.form-wrap .input-wrap {
+  padding: 0.2rem 0;
+}
+
+#overlay div.form-wrap .input-wrap input,
+#overlay div.form-wrap .input-wrap textarea,
+#overlay div.form-wrap .input-wrap select {
+  display: block;
+  min-width: 20rem;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #999;
+}
+
+#overlay div.form-wrap .input-wrap select {
+  min-width: calc(21rem - 2px);
+}
+
+#overlay div.form-wrap .controls {
+  text-align: right;
+}
+
+#overlay div.form-wrap .controls button {
+  margin-left: 0.4rem;
+}
+
+#overlay div.form-wrap .controls button.primary {
+  background: #3804f7;
+  color: #f0f0f0;
 }
 /*# sourceMappingURL=style.css.map */

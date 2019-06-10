@@ -25,18 +25,26 @@
         ROOT = data.name ? data : new Menu();
         console.log('Ready')
         let max = 0;
-        if (ROOT.menus.length) {
-            ROOT.menus.forEach(m => {
-                max = max <= m.id ? m.id : max;
-            })
+        let recur = (menu, lvl) => {
+            if (menu.menus.length) {
+                menu.menus.forEach(m => {
+                    max = max <= m.id ? m.id : max;
+                    recur(m, lvl + 1)
+                })
+            }
+
         }
+        recur(ROOT, 0)
         idTracker.id = max;
         renderRoot()
     };
-    let crEl = (type, cls) => {
+    let crEl = (type, cls, text) => {
         let el = document.createElement(type);
         if (cls) {
             el.className = cls
+        }
+        if (text) {
+            el.textContent = text
         }
 
         return el;
@@ -45,7 +53,6 @@
     let menuStack = []
     let selectedId = 0
     let renderRoot = (otherMenu) => {
-        console.log(menuStack, menuStack.length)
         let menu = otherMenu || ROOT
         let editor = emptyElementById('editor')
         let topbar = crEl('div', 'topbar')
@@ -70,8 +77,7 @@
             newMenu.id = getSn()
             newMenu.name = 'Untitled'
             menu.menus.push(newMenu)
-            let toolbar = emptyElementById('toolbar')
-            renderRoot(menu)
+            editMenu(newMenu, menu)
         })
         btnAdd.textContent = "Add"
         let lang = crEl('div')
@@ -96,20 +102,77 @@
         editor.appendChild(topbar)
         renderMenu(menu)
     };
+    let editMenu = (menu, parent) => {
+        let form = document.getElementById('overlay')
+        form.style.display = 'block';
+        let wrap = crEl('div', 'form-wrap')
+        let hd = crEl('h3')
+        hd.textContent = 'Edit Menu'
+        wrap.appendChild(hd)
+        let temp = {};
+        let type = crInput('select', 'Type', (e) => {
+            temp.type = e.target.value;
+            console.log(temp)
+        }, menu.type, menuTypes)
+        wrap.appendChild(type)
+        let name = crInput('text', 'Name', (e) => {
+            temp.name = e.target.value;
+        }, menu.name)
+        wrap.appendChild(name)
+        let textEng = crInput('textarea', 'Text ENG', (e) => {
+            temp.eng = e.target.value;
+        }, menu.eng)
+        wrap.appendChild(textEng)
+        let textSwa = crInput('textarea', 'Text SWA', (e) => {
+            temp.swa = e.target.value;
+        }, menu.swa)
+        wrap.appendChild(textSwa)
+
+        let controls = crContrs([{
+            label: 'Cancel',
+            cls: 'cancel',
+            cb: () => {
+                form.style.display = 'none';
+                renderRoot(parent)
+            }
+        }, {
+            label: 'Save',
+            cls: 'primary',
+            cb: () => {
+                form.style.display = 'none';
+                for (var attr in temp) {
+                    if (temp.hasOwnProperty(attr)) menu[attr] = temp[attr];
+                }
+                renderRoot(parent)
+            }
+        }])
+        wrap.appendChild(controls)
+
+        form.appendChild(wrap)
+        form.addEventListener('click', () => {
+            if (event.target.closest('.form-wrap')) return;
+            form.style.display = 'none';
+        })
+    }
     let renderMenu = (menu, newMenu) => {
         let editor = document.getElementById('editor')
-        let toolbar = emptyElementById('toolbar')
         if (menu.menus.length) {
             let sn = 0;
+            let chars = 0;
             menu.menus.forEach((m) => {
                 let line = crEl('div', 'option');
                 let num = crEl('span', 'num')
-                num.textContent = `${++sn}.`;
+                num.textContent = `${++sn}. `;
+                chars += num.textContent.length;
                 let text = crEl('span', 'text')
-                text.textContent = m.name
+                text.textContent = `${m.name}`
+                chars += text.textContent.length;
+                text.addEventListener('dblclick', () => {
+                    selectedId = m.id;
+                    editMenu(m, menu)
+                })
                 text.addEventListener('click', () => {
-                    console.log('Selected...', m)
-                    selectedId = m.id
+                    selectedId = m.id;
                     renderRoot(menu)
                 })
                 let arrowWrapper = crEl('span', 'arrow')
@@ -124,57 +187,55 @@
                 line.appendChild(text)
                 line.appendChild(arrowWrapper)
                 editor.appendChild(line)
-
                 if (selectedId === m.id) {
                     line.className = 'option active'
-
-                    //Menu Type
-                    let selWrap = crEl('div', 'input-wrap horizontal')
-                    let selLabel = crEl('label')
-                    selLabel.textContent = "Menu Type: "
-                    let updateType = (ev) => {
-                        let val = ev.target.value;
-                        console.log(`Changed: ${val}`)
-                        m.type = val
-                    }
-                    let selType = crEl('select')
-                    menuTypes.forEach(t => {
-                        let opt = crEl('option')
-                        opt.value = t.name
-                        opt.textContent = t.label
-                        if (t.name === m.type) {
-                            console.log(`Type found: ${t.name}`)
-                            opt.selected = true
-                        }
-                        selType.appendChild(opt)
-                    })
-                    selType.addEventListener('change', updateType)
-                    selLabel.appendChild(selType)
-                    selWrap.appendChild(selLabel)
-                    toolbar.appendChild(selWrap)
-
-                    toolbar.appendChild(crInput('input', 'ENG', (ev) => {
-                        let val = ev.target.value
-                        m.eng = val
-                    }, m.eng))
-                    toolbar.appendChild(crInput('input', 'SWA', (ev) => {
-                        let val = ev.target.value
-                        m.swa = val
-                    }, m.swa))
                 }
             })
+            let totalChars = crEl('div', 'total' + (chars > 143 ? ' exceed' : ''))
+            totalChars.appendChild(crEl('span', 'dummy'))
+            totalChars.appendChild(crEl('span', 'label', 'No. of characters'))
+            totalChars.appendChild(crEl('span', 'number', `${chars}`))
+            editor.appendChild(totalChars)
         } else {
             let line = crEl('div', 'option');
             line.textContent = 'No menu options yet, kindly add!'
             editor.appendChild(line)
         }
     };
-    let crInput = (type, lbl, onChange, value) => {
+    let crContrs = (buttons) => {
+        let controls = crEl('div', 'controls');
+        buttons.forEach((btn) => {
+            let tmp = crEl('button')
+            tmp.textContent = btn.label
+            tmp.addEventListener('click', btn.cb)
+            tmp.className = btn.cls
+            controls.appendChild(tmp)
+        })
+        return controls;
+    }
+    let crInput = (type, lbl, onChange, value, options) => {
         let wrap = crEl('div', 'input-wrap')
         let label = crEl('label')
         label.textContent = `${lbl}: `
         let input = crEl('input')
         input.type = type
+        if (type === 'textarea') {
+            input = crEl('textarea')
+            input.rows = 3;
+        } else if (type === 'select') {
+            input = crEl('select')
+            if (options) {
+                options.forEach((o) => {
+                    let opt = crEl('option')
+                    opt.value = o.name
+                    opt.textContent = o.label
+                    if (value === opt.name) {
+                        opt.selected = true
+                    }
+                    input.appendChild(opt)
+                })
+            }
+        }
         input.value = value || ''
         input.addEventListener('change', onChange)
         label.appendChild(input)
@@ -195,6 +256,7 @@
         console.log("Saving menu ...", ROOT);
         Api.saveMenu(ROOT, (success, data) => {
             console.log(data);
+            renderRoot()
         });
     }
     let btnSave = document.getElementById('saveMenu')

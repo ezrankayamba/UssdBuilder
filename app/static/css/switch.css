@@ -24,7 +24,6 @@
   vertical-align: middle;
   position: relative;
   display: inline-block;
-  margin-bottom: 1px;
 }
 
 #switch-wrap input[type="checkbox"] + label span.text {
