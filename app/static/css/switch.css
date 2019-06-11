@@ -4,7 +4,7 @@
 
 #switch-wrap label {
   padding: 0 0 !important;
-  background: #e5e5e5;
+  background: transparent;
 }
 
 #switch-wrap input[type="checkbox"] {

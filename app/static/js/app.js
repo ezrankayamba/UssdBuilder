@@ -52,9 +52,37 @@
 
     let menuStack = []
     let selectedId = 0
+    let langValue = 'eng'
     let renderRoot = (otherMenu) => {
         let menu = otherMenu || ROOT
         let editor = emptyElementById('editor')
+        let menuLabel = crEl('div', 'menu-label')
+        let theLabel = crEl('label')
+        theLabel.textContent = menu.name;
+
+        let lang = crEl('div')
+        lang.id = 'switch-wrap'
+        let check = crEl('input')
+        check.type = 'checkbox'
+        check.id = 'lang'
+        check.checked = langValue === 'eng'
+        check.addEventListener('change', (e) => {
+            let checked = e.target.checked
+            langValue = checked ? 'eng' : 'swa'
+            renderRoot(menu)
+        })
+        lang.appendChild(check)
+        let langLabel = crEl('label')
+        langLabel.setAttribute('for', 'lang')
+        let span1 = crEl('span', 'text')
+        let span2 = crEl('span', 'switch')
+        langLabel.appendChild(span1)
+        langLabel.appendChild(span2)
+        lang.appendChild(langLabel)
+        menuLabel.addEls = addEls
+        menuLabel.addEls([theLabel, lang])
+
+        editor.appendChild(menuLabel)
         let topbar = crEl('div', 'topbar')
         let btnBack = crEl('button', 'btn-back arrow')
         btnBack.innerHTML = `<i class="left"></i> Back`
@@ -65,13 +93,8 @@
             let prev = menuStack.pop()
             renderRoot(prev)
         })
-        let label = crEl('label', 'label')
-        label.textContent = menu.name
-        label.setAttribute('contentEditable', true)
-        label.addEventListener('keyup', (e) => {
-            menu.name = label.textContent
-        })
-        let btnAdd = crEl('button', 'btn-add')
+        let btnAdd = crEl('button', 'btn add')
+        btnAdd.innerHTML = `<i>+</i> Add`
         btnAdd.addEventListener('click', () => {
             let newMenu = new Menu()
             newMenu.id = getSn()
@@ -79,29 +102,29 @@
             menu.menus.push(newMenu)
             editMenu(newMenu, menu)
         })
-        btnAdd.textContent = "Add"
-        let lang = crEl('div')
-        lang.id = 'switch-wrap'
-        let check = crEl('input')
-        check.type = 'checkbox'
-        check.id = 'lang'
-        check.checked = true
-        lang.appendChild(check)
-        let langLabel = crEl('label')
-        langLabel.setAttribute('for', 'lang')
-        let span1 = crEl('span', 'text')
-        let span2 = crEl('span', 'switch')
-        langLabel.appendChild(span1)
-        langLabel.appendChild(span2)
-        lang.appendChild(langLabel)
+        let btnDel = crEl('button', 'btn delete')
+        btnDel.innerHTML = `<i>-</i> Delete`
+        let getMenu = () => {
+            return menu.menus.filter((m) => {
+                return m.id === selectedId
+            })[0]
+        }
+        btnDel.addEventListener('click', () => {
+            console.log('Delete', getMenu())
+        })
+        btnDel.disabled = !selectedId
 
-        topbar.appendChild(btnBack)
-        topbar.appendChild(label)
-        topbar.appendChild(lang)
-        topbar.appendChild(btnAdd)
+
+        topbar.addEls = addEls
+        topbar.addEls([btnBack, btnAdd, btnDel])
         editor.appendChild(topbar)
         renderMenu(menu)
     };
+    let addEls = function (childs) {
+        childs.forEach((c) => {
+            this.appendChild(c)
+        })
+    }
     let editMenu = (menu, parent) => {
         let form = document.getElementById('overlay')
         form.style.display = 'block';
@@ -112,7 +135,6 @@
         let temp = {};
         let type = crInput('select', 'Type', (e) => {
             temp.type = e.target.value;
-            console.log(temp)
         }, menu.type, menuTypes)
         wrap.appendChild(type)
         let name = crInput('text', 'Name', (e) => {
@@ -154,7 +176,7 @@
             form.style.display = 'none';
         })
     }
-    let renderMenu = (menu, newMenu) => {
+    let renderMenu = (menu) => {
         let editor = document.getElementById('editor')
         if (menu.menus.length) {
             let sn = 0;
@@ -165,7 +187,7 @@
                 num.textContent = `${++sn}. `;
                 chars += num.textContent.length;
                 let text = crEl('span', 'text')
-                text.textContent = `${m.name}`
+                text.textContent = `${m[langValue]}`
                 chars += text.textContent.length;
                 text.addEventListener('dblclick', () => {
                     selectedId = m.id;
