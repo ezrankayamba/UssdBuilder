@@ -12,7 +12,10 @@
         label: "Text Input"
     }, {
         name: "MESSAGE",
-        label: "Text Message"
+        label: "USSD Message"
+    }, {
+        name: "SMS",
+        label: "SMS Text"
     }];
     const idTracker = {
         id: 0
@@ -126,11 +129,11 @@
         })
     }
     let editMenu = (menu, parent) => {
-        let form = document.getElementById('overlay')
+        let form = emptyElementById('overlay')
         form.style.display = 'block';
         let wrap = crEl('div', 'form-wrap')
         let hd = crEl('h3')
-        hd.textContent = 'Edit Menu'
+        hd.textContent = `Edit Menu - ${menu.name}`
         wrap.appendChild(hd)
         let temp = {};
         let type = crInput('select', 'Type', (e) => {
@@ -182,38 +185,101 @@
             let sn = 0;
             let chars = 0;
             menu.menus.forEach((m) => {
-                let line = crEl('div', 'option');
-                let num = crEl('span', 'num')
-                num.textContent = `${++sn}. `;
-                chars += num.textContent.length;
-                let text = crEl('span', 'text')
-                text.textContent = `${m[langValue]}`
-                chars += text.textContent.length;
-                text.addEventListener('dblclick', () => {
-                    selectedId = m.id;
-                    editMenu(m, menu)
-                })
-                text.addEventListener('click', () => {
-                    selectedId = m.id;
-                    renderRoot(menu)
-                })
-                let arrowWrapper = crEl('span', 'arrow')
-                let arrow = crEl('i', 'right')
-                arrowWrapper.appendChild(arrow)
-                arrowWrapper.addEventListener('click', () => {
-                    menuStack.push(menu)
-                    selectedId = 0
-                    renderRoot(m)
-                })
-                line.appendChild(num)
-                line.appendChild(text)
-                line.appendChild(arrowWrapper)
-                editor.appendChild(line)
-                if (selectedId === m.id) {
-                    line.className = 'option active'
+                console.log('Type: ' + m.type)
+                if (m.type === 'TEXT') {
+                    let line = crEl('div', 'entry-line');
+                    let entryWrap = crEl('div', 'entry-wrap')
+                    let text = crEl('span', 'text')
+                    text.textContent = `${m[langValue]}`
+                    chars += text.textContent.length;
+                    text.addEventListener('dblclick', () => {
+                        selectedId = m.id;
+                        editMenu(m, menu)
+                    })
+                    text.addEventListener('click', () => {
+                        selectedId = m.id;
+                        renderRoot(menu)
+                    })
+                    let entry = crEl('input')
+                    entryWrap.addEls = addEls
+                    entryWrap.addEls([text, entry])
+
+                    let arrowWrapper = crEl('span', 'arrow')
+                    let arrow = crEl('i', 'right')
+                    arrowWrapper.appendChild(arrow)
+                    arrowWrapper.addEventListener('click', () => {
+                        menuStack.push(menu)
+                        selectedId = 0
+                        renderRoot(m)
+                    })
+                    line.appendChild(entryWrap)
+                    line.appendChild(arrowWrapper)
+                    editor.appendChild(line)
+                } else if (m.type === 'MESSAGE' || m.type === 'SMS') {
+                    let line = crEl('div', 'entry-line');
+                    let entryWrap = crEl('div', 'entry-wrap')
+                    let text = crEl('span', 'text')
+                    text.textContent = `${m[langValue]}`
+                    chars += text.textContent.length;
+                    text.addEventListener('dblclick', () => {
+                        selectedId = m.id;
+                        editMenu(m, menu)
+                    })
+                    text.addEventListener('click', () => {
+                        selectedId = m.id;
+                        renderRoot(menu)
+                    })
+                    entryWrap.addEls = addEls
+
+                    let arrowWrapper = crEl('span', 'arrow')
+                    let arrow = crEl('i', 'right')
+                    arrowWrapper.appendChild(arrow)
+                    arrowWrapper.addEventListener('click', () => {
+                        menuStack.push(menu)
+                        selectedId = 0
+                        renderRoot(m)
+                    })
+
+                    arrowWrapper.style.display = m.type === 'SMS' ? 'none' : 'inline-block'
+
+                    entryWrap.addEls([text])
+                    line.appendChild(entryWrap)
+                    line.appendChild(arrowWrapper)
+                    editor.appendChild(line)
+                } else {
+                    let line = crEl('div', 'option');
+                    let num = crEl('span', 'num')
+                    num.textContent = `${++sn}. `;
+                    chars += num.textContent.length;
+                    let text = crEl('span', 'text')
+                    text.textContent = `${m[langValue]}`
+                    chars += text.textContent.length;
+                    text.addEventListener('dblclick', () => {
+                        selectedId = m.id;
+                        editMenu(m, menu)
+                    })
+                    text.addEventListener('click', () => {
+                        selectedId = m.id;
+                        renderRoot(menu)
+                    })
+                    let arrowWrapper = crEl('span', 'arrow')
+                    let arrow = crEl('i', 'right')
+                    arrowWrapper.appendChild(arrow)
+                    arrowWrapper.addEventListener('click', () => {
+                        menuStack.push(menu)
+                        selectedId = 0
+                        renderRoot(m)
+                    })
+                    line.appendChild(num)
+                    line.appendChild(text)
+                    line.appendChild(arrowWrapper)
+                    editor.appendChild(line)
+                    if (selectedId === m.id) {
+                        line.className = 'option active'
+                    }
                 }
             })
-            let totalChars = crEl('div', 'total' + (chars > 143 ? ' exceed' : ''))
+            let totalChars = crEl('div', 'total' + ((chars > 143 && menu.type !== 'MESSAGE') ? ' exceed' : ''))
             totalChars.appendChild(crEl('span', 'dummy'))
             totalChars.appendChild(crEl('span', 'label', 'No. of characters'))
             totalChars.appendChild(crEl('span', 'number', `${chars}`))

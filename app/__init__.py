@@ -1,6 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, send_file
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import xlsxwriter
 import requests
 import xmltodict
 import os
@@ -50,6 +51,27 @@ def get_menu():
             file.write(data)
             file.close()
     return data
+
+
+@app.route('/export_menu', methods=['GET'])
+def export_menu():
+    try:
+        with open(data_file, 'r') as file:
+            data = file.read()
+            file.close()
+    except IOError:
+        data = "{}"
+        with open(data_file, 'w') as file:
+            file.write(data)
+            file.close()
+    import os
+
+    dirpath = os.getcwd()
+    path = '{}/export.xlsx'.format(dirpath)
+    workbook = xlsxwriter.Workbook(file)
+    worksheet = workbook.add_worksheet()
+    worksheet.write('A1', 'Hello world')
+    return send_file(path, as_attachment=True)
 
 
 @app.route('/update_menu', methods=['POST'])

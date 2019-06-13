@@ -100,7 +100,7 @@ div.container {
     #editor {
       background: rgb(230, 230, 230);
       padding: 0.5rem;
-      min-width: 20rem;
+      width: 20rem;
       .menu-label {
         background: #f0f0f0;
         padding: 0.2rem;
@@ -173,13 +173,65 @@ div.container {
         padding: 0.2rem;
         background: #ffffff;
         margin-bottom: 1px;
+        align-items: center;
         &.active {
           background: #efefff;
         }
         span {
+          padding: 0.2rem;
+          text-align: left;
           &.num {
             width: 2rem;
           }
+          &.text {
+            flex-grow: 1;
+            text-align: left;
+          }
+          &.arrow {
+            i {
+              border: solid #ccc;
+              border-width: 0 1.2px 1.2px 0;
+              display: inline-block;
+              padding: 3px;
+              width: 0.2rem;
+              height: 0.2rem;
+              margin: auto 1rem;
+              &.right {
+                transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+              }
+            }
+            &:hover {
+              i {
+                border: solid #3804f7;
+                border-width: 0 1.2px 1.2px 0;
+              }
+            }
+          }
+        }
+      }
+      .entry-line {
+        clear: both;
+        display: flex;
+        justify-content: left;
+        padding: 0.2rem;
+        background: #ffffff;
+        margin-bottom: 1px;
+        align-items: flex-end;
+        &.active {
+          background: #efefff;
+        }
+        .entry-wrap {
+          padding-bottom: 0.1rem;
+          span.text {
+            text-align: justify;
+          }
+          input {
+            width: 100%;
+          }
+        }
+        span {
+          padding: 0.2rem;
           &.text {
             flex-grow: 1;
             text-align: left;
@@ -278,9 +330,9 @@ div.controls {
   }
   div.form-wrap {
     position: absolute;
-    padding: 0.5rem 1rem;
+    /*padding: 0.5rem 1rem;*/
     border-radius: 4px;
-    top: 30%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
@@ -290,9 +342,14 @@ div.controls {
     box-shadow: 2px 2px 2px 0px rgba(51, 51, 51, 1);
     h3 {
       margin: 0 0 0.2rem;
+      padding: 0.5rem 1rem;
+      background: #3804f7;
+      color: #f0f0f0;
+      border-radius: 4px 4px 0 0;
     }
     .input-wrap {
-      padding: 0.2rem 0;
+      /*padding: 0.2rem 0;*/
+      padding: 0.5rem 1rem;
       input,
       textarea,
       select {
