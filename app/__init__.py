@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import xlsxwriter
 import requests
 import xmltodict
+from datetime import datetime
 import os
 import json
 app = Flask(__name__)
@@ -53,6 +54,9 @@ def get_menu():
     return data
 
 
+menu_head_format = None
+
+
 @app.route('/export_menu', methods=['GET'])
 def export_menu():
     try:
@@ -64,14 +68,57 @@ def export_menu():
         with open(data_file, 'w') as file:
             file.write(data)
             file.close()
-    import os
 
     dirpath = os.getcwd()
-    path = '{}/export.xlsx'.format(dirpath)
-    workbook = xlsxwriter.Workbook(file)
+    path = os.path.join(dirpath, "export.xlsx")
+    if os.path.exists(path):
+        os.remove(path)
+    workbook = xlsxwriter.Workbook(path)
+    menu_head_format = workbook.add_format({'bold': True})
     worksheet = workbook.add_worksheet()
-    worksheet.write('A1', 'Hello world')
+    #worksheet.write('A1', 'Hello world')
+    row = 0
+    col = 0
+    ROOT = json.loads(data)
+    render_menu(worksheet, row, col, ROOT)
+    workbook.close()
     return send_file(path, as_attachment=True)
+
+
+def cell(row, col):
+    l = chr(ord('A') + col)
+    return '{}:{}'.format(l, row)
+
+
+def render_menu(worksheet, row, col, menu):
+    last_row = row
+    for m in menu['menus']:
+        tmp = present_menu(worksheet, row+1, col, menu)
+        if tmp > last_row:
+            last_row = tmp
+        row = render_menu(worksheet, last_row, col+1, m) + 1
+    return last_row
+
+
+def present_menu(worksheet, row, col, menu):
+    worksheet.write(row, col, menu['name'], menu_head_format)
+    for m in menu['menus']:
+        row = row+1
+        worksheet.write(row, col, m['name'])
+    return row+1
+
+
+'''def render_menu(worksheet, row, col, menu):
+    padd = ' '*col*2
+    c = cell(row, col)
+    padd = '{}{}'.format(padd, c)
+    print('{} {}.{} - {}'.format(padd, row, col, menu['name']))
+    worksheet.write(row, col, menu['name'])
+    for m in menu['menus']:
+        render_menu(worksheet, row, col+1, m)
+        row = row+1
+    return row+1
+'''
 
 
 @app.route('/update_menu', methods=['POST'])
