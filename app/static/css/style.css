@@ -351,6 +351,10 @@ div.controls {
   text-align: center;
 }
 
+div.controls form {
+  display: inline;
+}
+
 div.controls button {
   border: 1px solid grey;
   padding: 0.5rem 0.8rem;

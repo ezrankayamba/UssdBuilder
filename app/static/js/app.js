@@ -347,7 +347,25 @@
             renderRoot()
         });
     }
+    let exportMenu = () => {
+        console.log('Export')
+        var form = document.createElement("form");
+        form.method = "GET";
+        form.action = "/export_menu";
+        //?tm=${Date.now()}
+        var tm = document.createElement("input");
+        tm.value = Date.now();
+        tm.name = "tm";
+        form.appendChild(tm);
+
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form)
+    }
     let btnSave = document.getElementById('saveMenu')
     btnSave.addEventListener('click', saveMenu);
+
+    document.getElementById('export').addEventListener('click', exportMenu)
+
     Api.fetchMenu(ready);
 })();

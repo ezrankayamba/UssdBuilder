@@ -71,54 +71,8 @@ def export_menu():
 
     dirpath = os.getcwd()
     path = os.path.join(dirpath, "export.xlsx")
-    if os.path.exists(path):
-        os.remove(path)
-    workbook = xlsxwriter.Workbook(path)
-    menu_head_format = workbook.add_format({'bold': True})
-    worksheet = workbook.add_worksheet()
-    #worksheet.write('A1', 'Hello world')
-    row = 0
-    col = 0
-    ROOT = json.loads(data)
-    render_menu(worksheet, row, col, ROOT)
-    workbook.close()
+    export_menu_run(path)
     return send_file(path, as_attachment=True)
-
-
-def cell(row, col):
-    l = chr(ord('A') + col)
-    return '{}:{}'.format(l, row)
-
-
-def render_menu(worksheet, row, col, menu):
-    last_row = row
-    for m in menu['menus']:
-        tmp = present_menu(worksheet, row+1, col, menu)
-        if tmp > last_row:
-            last_row = tmp
-        row = render_menu(worksheet, last_row, col+1, m) + 1
-    return last_row
-
-
-def present_menu(worksheet, row, col, menu):
-    worksheet.write(row, col, menu['name'], menu_head_format)
-    for m in menu['menus']:
-        row = row+1
-        worksheet.write(row, col, m['name'])
-    return row+1
-
-
-'''def render_menu(worksheet, row, col, menu):
-    padd = ' '*col*2
-    c = cell(row, col)
-    padd = '{}{}'.format(padd, c)
-    print('{} {}.{} - {}'.format(padd, row, col, menu['name']))
-    worksheet.write(row, col, menu['name'])
-    for m in menu['menus']:
-        render_menu(worksheet, row, col+1, m)
-        row = row+1
-    return row+1
-'''
 
 
 @app.route('/update_menu', methods=['POST'])
@@ -131,3 +85,115 @@ def update_menu():
         file.write(data)
         file.close()
     return json.dumps({'success': True})
+
+
+def export_menu_run(path):
+    try:
+        with open(data_file, 'r') as file:
+            data = file.read()
+            file.close()
+    except IOError:
+        data = "{}"
+        with open(data_file, 'w') as file:
+            file.write(data)
+            file.close()
+    print('Path: {}'.format(path))
+    if os.path.exists(path):
+        os.remove(path)
+    workbook = xlsxwriter.Workbook(path)
+    default_fmt = workbook.add_format()
+    default_fmt.set_text_wrap()
+    act_fmt = workbook.add_format()
+    act_fmt.set_text_wrap()
+    act_fmt.set_bold()
+    lbl_fmt = workbook.add_format()
+    lbl_fmt.set_bold()
+    lbl_fmt.set_pattern(1)
+    lbl_fmt.set_bg_color('#002060')
+    lbl_fmt.set_font_color('#B6FF15')
+    ttchars_fmt = workbook.add_format()
+    ttchars_fmt.set_border()
+    ttchars_fmt.set_border_color('#333333')
+    fmt = {
+        'active': act_fmt,
+        'label': lbl_fmt,
+        'ttchars': ttchars_fmt,
+        'default': default_fmt
+    }
+
+    ROOT = json.loads(data)
+    worksheet_en = workbook.add_worksheet('English')
+    worksheet_sw = workbook.add_worksheet('Swahili')
+    render_menu('eng', worksheet_en, ROOT, fmt)
+    global stack
+    stack = []
+    global stack2
+    stack2 = []
+    global row
+    row = 1
+    global prev_active
+    prev_active = []
+    for i in range(20):
+        prev_active.append(None)
+    render_menu('swa', worksheet_sw, ROOT, fmt)
+    workbook.close()
+
+
+stack = []
+stack2 = []
+
+row = 1
+prev_active = []
+for i in range(20):
+    prev_active.append(None)
+
+
+def render_menu(lang, worksheet, menu, fmt):
+    global row
+    global prev_active
+    m_size = len(menu['menus'])
+    for m in menu['menus']:
+        r = present_menu(lang, worksheet, menu)
+        stack.append(r)
+        stack2.append(m['name'])
+        render_menu(lang, worksheet, m, fmt)
+    if not m_size:
+        max_rows = 0
+        for i, it in enumerate(stack):
+            total_chars = 0
+            type = 'OPTIONS'
+            for j, m in enumerate(it):
+                if prev_active[i] and prev_active[i] == stack2[i]:
+                    print('Duplicate')
+                    total_chars = 0
+                    break
+                max_rows = max(max_rows, len(it))
+                total_chars = total_chars + len(m)
+                if j == 0:
+                    worksheet.write(row + j, 1 + i * 2, m, fmt['label'])
+                elif stack2[i] == m:
+                    worksheet.write(
+                        row + j, 1 + i * 2, '{}. {}'.format(j, m), fmt['active'])
+                    total_chars = total_chars + 3
+                else:
+                    worksheet.write(row + j, 1 + i * 2,
+                                    '{}. {}'.format(j, m), fmt['default'])
+                    total_chars = total_chars + 3
+                if j == len(it) - 1:
+                    worksheet.write_number(row + max_rows, 1 + i * 2,
+                                           total_chars, fmt['ttchars'])
+
+            prev_active[i] = stack2[i]
+            print('{} - {}'.format(prev_active[i], stack2[i]))
+        row = row + max_rows + 3
+    if len(stack) > 0:
+        stack.pop()
+    if len(stack2) > 0:
+        stack2.pop()
+
+
+def present_menu(lang, worksheet, menu):
+    menu_repr = [menu['name']]
+    for m in menu['menus']:
+        menu_repr.append(m.get(lang, m['name']))
+    return menu_repr
