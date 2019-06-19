@@ -102,9 +102,10 @@ def export_menu_run(path):
         os.remove(path)
     workbook = xlsxwriter.Workbook(path)
     default_fmt = workbook.add_format()
-    # default_fmt.set_text_wrap()
+    default_fmt.set_text_wrap()
+    default_fmt.set_align('top')
     act_fmt = workbook.add_format()
-    # act_fmt.set_text_wrap()
+    act_fmt.set_text_wrap()
     act_fmt.set_bold()
     lbl_fmt = workbook.add_format()
     lbl_fmt.set_bold()
@@ -123,7 +124,9 @@ def export_menu_run(path):
 
     ROOT = json.loads(data)
     worksheet_en = workbook.add_worksheet('English')
+    worksheet_en.set_column(0, 20, 30)
     worksheet_sw = workbook.add_worksheet('Swahili')
+    worksheet_sw.set_column(0, 20, 30)
     render_menu('eng', worksheet_en, ROOT, fmt)
     global stack
     stack = []
@@ -177,7 +180,7 @@ def render_menu(lang, worksheet, menu, fmt):
         for i, it in enumerate(stack):
             total_chars = 0
             type = 'OPTIONS'
-            for j, m in enumerate(it):
+            '''for j, m in enumerate(it):
                 if prev_active[i] and prev_active[i] == stack2[i]:
                     print('Duplicate')
                     total_chars = 0
@@ -197,6 +200,19 @@ def render_menu(lang, worksheet, menu, fmt):
                 if j == len(it) - 1:
                     worksheet.write_number(row + max_rows, 1 + i * 2,
                                            total_chars, fmt['ttchars'])
+            '''
+            if not len(it):
+                continue
+            max_rows = max(max_rows, len(it))
+            total_chars = total_chars + len(it[0])
+            worksheet.write(row + 0, 1 + i * 2, it[0], fmt['label'])
+            it.pop(0)
+
+            txt = '\n'.join(it)
+
+            worksheet.write(row + 1, 1 + i * 2,
+                            '{}'.format(txt), fmt['default'])
+            total_chars = total_chars + 3
 
             prev_active[i] = stack2[i]
             print('{} - {}'.format(prev_active[i], stack2[i]))
