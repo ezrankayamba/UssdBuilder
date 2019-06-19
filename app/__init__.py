@@ -102,9 +102,9 @@ def export_menu_run(path):
         os.remove(path)
     workbook = xlsxwriter.Workbook(path)
     default_fmt = workbook.add_format()
-    default_fmt.set_text_wrap()
+    # default_fmt.set_text_wrap()
     act_fmt = workbook.add_format()
-    act_fmt.set_text_wrap()
+    # act_fmt.set_text_wrap()
     act_fmt.set_bold()
     lbl_fmt = workbook.add_format()
     lbl_fmt.set_bold()
@@ -136,6 +136,21 @@ def export_menu_run(path):
     for i in range(20):
         prev_active.append(None)
     render_menu('swa', worksheet_sw, ROOT, fmt)
+
+    worksheet = workbook.add_worksheet('Test')
+    header2 = workbook.add_format({
+        'bold':     True,
+        'align':    'center',
+        'border':   6,
+        'valign':   'vcenter',
+        'fg_color': '#D7E4BC',
+        'font_name': 'Calibri',
+        'font_size': 12
+
+    })
+    header2.set_text_wrap()
+    worksheet.merge_range('B4:F6', "CompanyName:ABC \n Country:India", header2)
+
     workbook.close()
 
 

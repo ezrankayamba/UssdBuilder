@@ -248,6 +248,25 @@
                     editor.appendChild(line)
                 } else {
                     let line = crEl('div', 'option');
+
+                    let lineOrder = crEl('div');
+                    lineOrder.addEventListener('dragover', (ev) => {
+                        ev.preventDefault()
+                        if (ev.target !== line) {
+                            console.log('Dragging over ...' + m.name)
+                        }
+                    })
+                    lineOrder.addEventListener('drop', (ev) => {
+                        let origMenu = ev.dataTransfer.getData('menu')
+                        console.log(origMenu)
+                    })
+
+
+                    line.draggable = true
+                    line.addEventListener('dragstart', (ev) => {
+                        ev.dataTransfer.setData('menu', m)
+                        ev.currentTarget.style.border = "1px dashed #3333FF";
+                    })
                     let num = crEl('span', 'num')
                     num.textContent = `${++sn}. `;
                     chars += num.textContent.length;
@@ -273,6 +292,7 @@
                     line.appendChild(num)
                     line.appendChild(text)
                     line.appendChild(arrowWrapper)
+                    editor.appendChild(lineOrder)
                     editor.appendChild(line)
                     if (selectedId === m.id) {
                         line.className = 'option active'
