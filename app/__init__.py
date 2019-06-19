@@ -87,6 +87,23 @@ def update_menu():
     return json.dumps({'success': True})
 
 
+def reset_columns(worksheet):
+    global stack
+    stack = []
+    global stack2
+    stack2 = []
+    global row
+    row = 1
+    global prev_active
+    prev_active = []
+    for i in range(40):
+        if i % 2:
+            prev_active.append(None)
+            worksheet.set_column(i, i, 30)
+        else:
+            worksheet.set_column(i, i, 10)
+
+
 def export_menu_run(path):
     try:
         with open(data_file, 'r') as file:
@@ -106,6 +123,7 @@ def export_menu_run(path):
     default_fmt.set_align('top')
     act_fmt = workbook.add_format()
     act_fmt.set_text_wrap()
+    act_fmt.set_align('top')
     act_fmt.set_bold()
     lbl_fmt = workbook.add_format()
     lbl_fmt.set_bold()
@@ -123,37 +141,16 @@ def export_menu_run(path):
     }
 
     ROOT = json.loads(data)
+
     worksheet_en = workbook.add_worksheet('English')
-    worksheet_en.set_column(0, 20, 30)
-    worksheet_sw = workbook.add_worksheet('Swahili')
-    worksheet_sw.set_column(0, 20, 30)
+    reset_columns(worksheet_en)
+    print(prev_active)
     render_menu('eng', worksheet_en, ROOT, fmt)
-    global stack
-    stack = []
-    global stack2
-    stack2 = []
-    global row
-    row = 1
-    global prev_active
-    prev_active = []
-    for i in range(20):
-        prev_active.append(None)
+
+    worksheet_sw = workbook.add_worksheet('Swahili')
+    reset_columns(worksheet_sw)
+    print(prev_active)
     render_menu('swa', worksheet_sw, ROOT, fmt)
-
-    worksheet = workbook.add_worksheet('Test')
-    header2 = workbook.add_format({
-        'bold':     True,
-        'align':    'center',
-        'border':   6,
-        'valign':   'vcenter',
-        'fg_color': '#D7E4BC',
-        'font_name': 'Calibri',
-        'font_size': 12
-
-    })
-    header2.set_text_wrap()
-    worksheet.merge_range('B4:F6', "CompanyName:ABC \n Country:India", header2)
-
     workbook.close()
 
 
@@ -162,8 +159,6 @@ stack2 = []
 
 row = 1
 prev_active = []
-for i in range(20):
-    prev_active.append(None)
 
 
 def render_menu(lang, worksheet, menu, fmt):
@@ -173,50 +168,66 @@ def render_menu(lang, worksheet, menu, fmt):
     for m in menu['menus']:
         r = present_menu(lang, worksheet, menu)
         stack.append(r)
-        stack2.append(m['name'])
+        stack2.append(m.get(lang, m['name']))
         render_menu(lang, worksheet, m, fmt)
     if not m_size:
         max_rows = 0
         for i, it in enumerate(stack):
             total_chars = 0
-            type = 'OPTIONS'
-            '''for j, m in enumerate(it):
-                if prev_active[i] and prev_active[i] == stack2[i]:
-                    print('Duplicate')
-                    total_chars = 0
-                    break
-                max_rows = max(max_rows, len(it))
-                total_chars = total_chars + len(m)
-                if j == 0:
-                    worksheet.write(row + j, 1 + i * 2, m, fmt['label'])
-                elif stack2[i] == m:
-                    worksheet.write(
-                        row + j, 1 + i * 2, '{}. {}'.format(j, m), fmt['active'])
-                    total_chars = total_chars + 3
-                else:
-                    worksheet.write(row + j, 1 + i * 2,
-                                    '{}. {}'.format(j, m), fmt['default'])
-                    total_chars = total_chars + 3
-                if j == len(it) - 1:
-                    worksheet.write_number(row + max_rows, 1 + i * 2,
-                                           total_chars, fmt['ttchars'])
-            '''
+            if prev_active[i] and prev_active[i] == stack2[i]:
+                total_chars = 0
+                continue
+
             if not len(it):
                 continue
             max_rows = max(max_rows, len(it))
             total_chars = total_chars + len(it[0])
-            worksheet.write(row + 0, 1 + i * 2, it[0], fmt['label'])
+            m_label_split = it[0].split(':')
+            m_label = m_label_split[0]
+            m_type = m_label_split[1]
+            worksheet.write(row + 0, 1 + i * 2, m_label, fmt['label'])
             it.pop(0)
 
-            txt = '\n'.join(it)
+            m_list1 = []
+            m_list2 = []
+            m_next = False
+            m_active = ''
+            for j, m in enumerate(it):
+                if stack2[i] == m:
+                    m_next = True
+                    m_active = m
+                    if j == 0:
+                        m_active = '{}\n'.format(m_active)
+                    else:
+                        m_active = '\n{}\n'.format(m_active)
+                    continue
+                if m_next:
+                    m_list2.append(m)
+                else:
+                    m_list1.append(m)
 
-            worksheet.write(row + 1, 1 + i * 2,
-                            '{}'.format(txt), fmt['default'])
+            txt = '\n'.join(it)
+            m_text1 = '{}'.format('\n'.join(m_list1))
+            m_active_text = '\n{}'.format(m_active)
+            m_text2 = '{}\n'.format('\n'.join(m_list2))
+            ret = ''
+
+            if m_type in ['SMS', 'TEXT', 'MESSAGE']:
+                ret = worksheet.write(
+                    row + 1, 1 + i * 2, '{}\n'.format('\n'.join(it)), fmt['default'])
+            elif m_text1 == '':
+                ret = worksheet.write_rich_string(
+                    row + 1, 1 + i * 2, m_active, fmt['default'], '{}'.format(m_text2),  fmt['active'])
+            else:
+                ret = worksheet.write_rich_string(row + 1, 1 + i * 2, '{}'.format(
+                    m_text1), fmt['active'], m_active, fmt['default'], '{}'.format(m_text2),  fmt['default'])
+            if ret < 0:
+                print('Label: {}, Status: {}, Type: {}, MText1: {}, Active: {},  mText2: {}'.format(
+                    m_label, ret, m_type, m_text1, m_active, m_text2))
             total_chars = total_chars + 3
 
             prev_active[i] = stack2[i]
-            print('{} - {}'.format(prev_active[i], stack2[i]))
-        row = row + max_rows + 3
+        row = row + 4
     if len(stack) > 0:
         stack.pop()
     if len(stack2) > 0:
@@ -224,7 +235,7 @@ def render_menu(lang, worksheet, menu, fmt):
 
 
 def present_menu(lang, worksheet, menu):
-    menu_repr = [menu['name']]
+    menu_repr = ['{}:{}'.format(menu['name'], menu.get('type', 'OPTIONS'))]
     for m in menu['menus']:
         menu_repr.append(m.get(lang, m['name']))
     return menu_repr

@@ -186,7 +186,7 @@
             let chars = 0;
             menu.menus.forEach((m) => {
                 console.log('Type: ' + m.type)
-                if (m.type === 'TEXT') {
+                if (menu.type === 'TEXT') {
                     let line = crEl('div', 'entry-line');
                     let entryWrap = crEl('div', 'entry-wrap')
                     let text = crEl('span', 'text')
