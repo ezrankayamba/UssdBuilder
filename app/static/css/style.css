@@ -149,45 +149,24 @@ div.container section .version {
   margin: 0.4rem 0;
 }
 
-.editor-wrap #menu #editor .topbar button.btn-back {
+.editor-wrap #menu #editor .topbar button.btn {
+  min-width: 32px;
+  padding-top: 6px;
+  margin-left: 4px;
+  float: right;
+}
+
+.editor-wrap #menu #editor .topbar button.btn:disabled {
+  opacity: 0.5;
+}
+
+.editor-wrap #menu #editor .topbar button.btn img {
+  width: 14px;
+}
+
+.editor-wrap #menu #editor .topbar button.btn.back {
   float: left;
-}
-
-.editor-wrap #menu #editor .topbar button.btn-back.arrow i {
-  border: solid #000;
-  border-width: 0 1.2px 1.2px 0;
-  display: inline-block;
-  padding: 3px;
-  width: 0;
-  height: 0;
-  margin: auto;
-}
-
-.editor-wrap #menu #editor .topbar button.btn-back.arrow i.left {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-}
-
-.editor-wrap #menu #editor .topbar button.btn-back.arrow:disabled i {
-  border: solid #999;
-  border-width: 0 1.2px 1.2px 0;
-}
-
-.editor-wrap #menu #editor .topbar button.btn i {
-  display: inline-block;
-  padding: 0 3px 0 0;
-  margin: auto;
-  font-size: 14px;
-  font-weight: bolder;
-}
-
-.editor-wrap #menu #editor .topbar button.btn.delete {
-  float: right;
-  color: #ff3333;
-}
-
-.editor-wrap #menu #editor .topbar button.btn.add {
-  float: right;
+  margin-left: 0;
 }
 
 .editor-wrap #menu #editor .option {
@@ -220,7 +199,7 @@ div.container section .version {
 }
 
 .editor-wrap #menu #editor .option span.num {
-  width: 2rem;
+  width: 1.2rem;
 }
 
 .editor-wrap #menu #editor .option span.text {
@@ -322,8 +301,8 @@ div.container section .version {
       -ms-flex-pack: left;
           justify-content: left;
   padding: 0.2rem;
-  background: #333;
-  color: #33ff33;
+  border: 1px solid #f0f0f0;
+  color: #3804f7;
   margin-top: 8px;
 }
 
@@ -350,7 +329,6 @@ div.container section .version {
 
 div.controls {
   padding: 0.5rem 0.5rem;
-  /*background: rgb(230, 230, 230);*/
   border-top: 1px solid #ccc;
   text-align: center;
 }

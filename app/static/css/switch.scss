@@ -1,12 +1,12 @@
-$switch-size: 1.1rem;
+$switch-size: 1.2rem;
 $label-length: 4rem;
-$off-pos: 40%;
-$on-pos: 19%;
+$off-pos: 50%;
+$on-pos: 16%;
 $color-wrap-bg: transparent;
 $color-on-label-bg: #a472ea;
 $color-on-switch-bg: #6200ee;
 $color-off-label-bg: #9b9b9b;
-$color-off-switch-bg: #ffffff;
+$color-off-switch-bg: #ffbe33;
 #switch-wrap {
   display: inline-block;
   label {
@@ -30,7 +30,7 @@ $color-off-switch-bg: #ffffff;
           color: #f0f0f0;
           &:before {
             content: "ENG";
-            font-size: 90%;
+            font-size: 80%;
             border-radius: 8px 0 0 8px;
             padding-left: 8px;
             background: $color-on-label-bg;
@@ -51,7 +51,9 @@ $color-off-switch-bg: #ffffff;
         span {
           &.text {
             &:before {
+              vertical-align: middle;
               content: "SWA";
+              font-size: 80%;
               background: $color-off-label-bg;
               border-radius: 0 8px 8px 0;
               padding-left: 18px;
