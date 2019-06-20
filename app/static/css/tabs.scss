@@ -1,0 +1,21 @@
+$tabs-header-bg-color: #f1f1f1;
+$tabs-header-active-bg-color: #cccccc;
+.tabs {
+  border: 1px solid $tabs-header-bg-color;
+  margin-top: 1rem;
+  .headers {
+    background: $tabs-header-bg-color;
+    h2 {
+      margin: 0;
+      font-weight: normal;
+      padding: 0.4rem;
+      display: inline-block;
+      &.active {
+        background: $tabs-header-active-bg-color;
+      }
+    }
+  }
+  .tab {
+    display: none;
+  }
+}

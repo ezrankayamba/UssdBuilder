@@ -1,0 +1,24 @@
+.tabs {
+  border: 1px solid #f1f1f1;
+  margin-top: 1rem;
+}
+
+.tabs .headers {
+  background: #f1f1f1;
+}
+
+.tabs .headers h2 {
+  margin: 0;
+  font-weight: normal;
+  padding: 0.4rem;
+  display: inline-block;
+}
+
+.tabs .headers h2.active {
+  background: #cccccc;
+}
+
+.tabs .tab {
+  display: none;
+}
+/*# sourceMappingURL=tabs.css.map */

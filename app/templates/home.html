@@ -8,7 +8,7 @@
       rel="shortcut icon"
       href="{{url_for('static', filename='img/favicon.ico')}}"
     />
-    <title>Tigo Pesa - Menu Repos</title>
+    <title>Tigo Pesa Tools</title>
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='css/style.css')}}"
@@ -17,26 +17,47 @@
       rel="stylesheet"
       href="{{url_for('static', filename='css/switch.css')}}"
     />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/tabs.css')}}"
+    />
   </head>
 
   <body>
     <div class=" container">
       <header>
-        <h1>Ussd Menu Builder</h1>
+        <h1>Tigo Pesa Tools</h1>
       </header>
-      <section>
-        <div class="editor-wrap">
-          <div id="menu">
-            <div id="editor"></div>
-          </div>
+      <div class="tabs" id="tabs">
+        <div class="headers" id="headers">
+          <h2 data-tab="menu-builder">Menu Builder</h2>
+          <h2 data-tab="trans-test">Trans Test</h2>
         </div>
-        <span class="version">v1.0.1</span>
-      </section>
+        <div class="tab" id="menu-builder">
+          <section>
+            <div class="editor-wrap">
+              <div id="menu">
+                <div id="editor"></div>
+              </div>
+            </div>
+            <span class="version">v1.0.1</span>
+          </section>
+        </div>
+        <div class="tab" id="trans-test">
+          <section>
+            <p>Trans test</p>
+          </section>
+        </div>
+      </div>
     </div>
     <div id="overlay"></div>
     <script
       type="module"
       src="{{url_for('static', filename='js/app.js')}}"
+    ></script>
+    <script
+      type="module"
+      src="{{url_for('static', filename='js/tabs.js')}}"
     ></script>
   </body>
 </html>
