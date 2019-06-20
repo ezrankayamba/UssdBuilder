@@ -78,7 +78,6 @@ def export_menu():
 @app.route('/update_menu', methods=['POST'])
 def update_menu():
     data = request.data.decode('utf-8')
-    # print(data)
     if not data:
         data = "{}"
     with open(data_file, 'w') as file:
@@ -121,6 +120,8 @@ def export_menu_run(path):
     default_fmt = workbook.add_format()
     default_fmt.set_text_wrap()
     default_fmt.set_align('top')
+    default_fmt.set_border()
+    default_fmt.set_border_color('#002060')
     act_fmt = workbook.add_format()
     act_fmt.set_text_wrap()
     act_fmt.set_align('top')
@@ -132,7 +133,7 @@ def export_menu_run(path):
     lbl_fmt.set_font_color('#B6FF15')
     ttchars_fmt = workbook.add_format()
     ttchars_fmt.set_border()
-    ttchars_fmt.set_border_color('#333333')
+    ttchars_fmt.set_border_color('#002060')
     fmt = {
         'active': act_fmt,
         'label': lbl_fmt,
@@ -144,12 +145,10 @@ def export_menu_run(path):
 
     worksheet_en = workbook.add_worksheet('English')
     reset_columns(worksheet_en)
-    print(prev_active)
     render_menu('eng', worksheet_en, ROOT, fmt)
 
     worksheet_sw = workbook.add_worksheet('Swahili')
     reset_columns(worksheet_sw)
-    print(prev_active)
     render_menu('swa', worksheet_sw, ROOT, fmt)
     workbook.close()
 
@@ -159,6 +158,10 @@ stack2 = []
 
 row = 1
 prev_active = []
+
+
+def cell(row, col):
+    return '{}{}'.format(chr(ord('A') + col), row + 1)
 
 
 def render_menu(lang, worksheet, menu, fmt):
@@ -180,9 +183,19 @@ def render_menu(lang, worksheet, menu, fmt):
 
             if not len(it):
                 continue
+
+            if len(it) > 1:
+                m_first = it[1]
+                splt = m_first.split(':::')
+                m_first = splt[1]
+                m_fm_order = splt[0]
+                if stack2[i] == m_first and m_fm_order == '0':
+                    row = row - 4  # Offset incremented row
+                    continue
+
             max_rows = max(max_rows, len(it))
             total_chars = total_chars + len(it[0])
-            m_label_split = it[0].split(':')
+            m_label_split = it[0].split(':::')
             m_label = m_label_split[0]
             m_type = m_label_split[1]
             worksheet.write(row + 0, 1 + i * 2, m_label, fmt['label'])
@@ -192,32 +205,41 @@ def render_menu(lang, worksheet, menu, fmt):
             m_list2 = []
             m_next = False
             m_active = ''
+
             for j, m in enumerate(it):
+                m_parts = m.split(':::')
+                m = m_parts[1]
+                order_no = int(m_parts[0])
                 if stack2[i] == m:
                     m_next = True
                     m_active = m
                     if j == 0:
-                        m_active = '{}\n'.format(m_active)
+                        m_active = '{}. {}\n'.format(order_no, m_active)
                     else:
-                        m_active = '\n{}\n'.format(m_active)
+                        m_active = '\n{}. {}\n'.format(order_no, m_active)
                     continue
                 if m_next:
-                    m_list2.append(m)
+                    m_list2.append('{}. {}'.format(order_no, m))
                 else:
-                    m_list1.append(m)
+                    if order_no:
+                        m_list1.append('{}. {}'.format(order_no, m))
+                    else:
+                        m_list1.append('{}'.format(m))
 
-            txt = '\n'.join(it)
             m_text1 = '{}'.format('\n'.join(m_list1))
             m_active_text = '\n{}'.format(m_active)
             m_text2 = '{}\n'.format('\n'.join(m_list2))
             ret = ''
 
             if m_type in ['SMS', 'TEXT', 'MESSAGE']:
+                tmp = []
+                for it1 in it:
+                    tmp.append(it1.split(':::')[1])
                 ret = worksheet.write(
-                    row + 1, 1 + i * 2, '{}\n'.format('\n'.join(it)), fmt['default'])
+                    row + 1, 1 + i * 2, '{}\n'.format('\n'.join(tmp)), fmt['default'])
             elif m_text1 == '':
                 ret = worksheet.write_rich_string(
-                    row + 1, 1 + i * 2, m_active, fmt['default'], '{}'.format(m_text2),  fmt['active'])
+                    row + 1, 1 + i * 2, m_active, fmt['default'], '{}'.format(m_text2),  fmt['active'], '\n', fmt['default'])
             else:
                 ret = worksheet.write_rich_string(row + 1, 1 + i * 2, '{}'.format(
                     m_text1), fmt['active'], m_active, fmt['default'], '{}'.format(m_text2),  fmt['default'])
@@ -225,6 +247,8 @@ def render_menu(lang, worksheet, menu, fmt):
                 print('Label: {}, Status: {}, Type: {}, MText1: {}, Active: {},  mText2: {}'.format(
                     m_label, ret, m_type, m_text1, m_active, m_text2))
             total_chars = total_chars + 3
+            worksheet.write_formula(
+                row + 2, 1 + i * 2, '=LEN({})'.format(cell(row + 1, 1 + i * 2)), fmt['ttchars'])    # OK
 
             prev_active[i] = stack2[i]
         row = row + 4
@@ -235,7 +259,8 @@ def render_menu(lang, worksheet, menu, fmt):
 
 
 def present_menu(lang, worksheet, menu):
-    menu_repr = ['{}:{}'.format(menu['name'], menu.get('type', 'OPTIONS'))]
+    menu_repr = ['{}:::{}'.format(menu['name'], menu.get('type', 'OPTIONS'))]
     for m in menu['menus']:
-        menu_repr.append(m.get(lang, m['name']))
+        menu_repr.append('{}:::{}'.format(
+            m['orderNo'], m.get(lang, m['name'])))
     return menu_repr

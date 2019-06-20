@@ -29,6 +29,7 @@
         console.log('Ready')
         let max = 0;
         let recur = (menu, lvl) => {
+            //menu.order = menu.order || 0
             if (menu.menus.length) {
                 menu.menus.forEach(m => {
                     max = max <= m.id ? m.id : max;
@@ -38,6 +39,7 @@
 
         }
         recur(ROOT, 0)
+        console.log(ROOT)
         idTracker.id = max;
         renderRoot()
     };
@@ -144,6 +146,10 @@
             temp.name = e.target.value;
         }, menu.name)
         wrap.appendChild(name)
+        let orderNo = crInput('number', 'Order Number', (e) => {
+            temp.orderNo = e.target.value;
+        }, menu.orderNo)
+        wrap.appendChild(orderNo)
         let textEng = crInput('textarea', 'Text ENG', (e) => {
             temp.eng = e.target.value;
         }, menu.eng)
@@ -180,6 +186,10 @@
         })
     }
     let renderMenu = (menu) => {
+        menu.menus = menu.menus.sort(function (m1, m2) {
+            return m1.orderNo - m2.orderNo;
+        });
+        console.log('Ordered Menus: ', menu.menus)
         let editor = document.getElementById('editor')
         if (menu.menus.length) {
             let sn = 0;
@@ -248,28 +258,9 @@
                     editor.appendChild(line)
                 } else {
                     let line = crEl('div', 'option');
-
-                    let lineOrder = crEl('div');
-                    lineOrder.addEventListener('dragover', (ev) => {
-                        ev.preventDefault()
-                        if (ev.target !== line) {
-                            console.log('Dragging over ...' + m.name)
-                        }
-                    })
-                    lineOrder.addEventListener('drop', (ev) => {
-                        let origMenu = ev.dataTransfer.getData('menu')
-                        console.log(origMenu)
-                    })
-
-
-                    line.draggable = true
-                    line.addEventListener('dragstart', (ev) => {
-                        ev.dataTransfer.setData('menu', m)
-                        ev.currentTarget.style.border = "1px dashed #3333FF";
-                    })
                     let num = crEl('span', 'num')
-                    num.textContent = `${++sn}. `;
-                    chars += num.textContent.length;
+                    num.textContent = `${m.orderNo}. `;
+                    chars += m.orderNo === 0 ? 0 : num.textContent.length;
                     let text = crEl('span', 'text')
                     text.textContent = `${m[langValue]}`
                     chars += text.textContent.length;
@@ -289,17 +280,20 @@
                         selectedId = 0
                         renderRoot(m)
                     })
-                    line.appendChild(num)
-                    line.appendChild(text)
-                    line.appendChild(arrowWrapper)
-                    editor.appendChild(lineOrder)
+                    if (m.orderNo > 0) {
+                        line.appendChild(num)
+                        line.appendChild(text)
+                        line.appendChild(arrowWrapper)
+                    } else {
+                        line.appendChild(text)
+                    }
                     editor.appendChild(line)
                     if (selectedId === m.id) {
                         line.className = 'option active'
                     }
                 }
             })
-            let totalChars = crEl('div', 'total' + ((chars > 143 && menu.type !== 'MESSAGE') ? ' exceed' : ''))
+            let totalChars = crEl('div', 'total' + ((chars > 155 && menu.type !== 'MESSAGE') ? ' exceed' : ''))
             totalChars.appendChild(crEl('span', 'dummy'))
             totalChars.appendChild(crEl('span', 'label', 'No. of characters'))
             totalChars.appendChild(crEl('span', 'number', `${chars}`))
@@ -345,6 +339,9 @@
             }
         }
         input.value = value || ''
+        if (type === 'number') {
+            input.value = value || 0
+        }
         input.addEventListener('change', onChange)
         label.appendChild(input)
         wrap.appendChild(label)

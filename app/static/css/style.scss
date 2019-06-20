@@ -177,6 +177,9 @@ div.container {
         &.active {
           background: #efefff;
         }
+        &.drag {
+          background: #ccc;
+        }
         span {
           padding: 0.2rem;
           text-align: left;

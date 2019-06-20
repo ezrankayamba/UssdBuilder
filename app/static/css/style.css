@@ -210,6 +210,10 @@ div.container section .version {
   background: #efefff;
 }
 
+.editor-wrap #menu #editor .option.drag {
+  background: #ccc;
+}
+
 .editor-wrap #menu #editor .option span {
   padding: 0.2rem;
   text-align: left;
