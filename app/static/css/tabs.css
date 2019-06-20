@@ -1,6 +1,7 @@
 .tabs {
   border: 1px solid #f1f1f1;
   margin-top: 1rem;
+  padding: 0;
 }
 
 .tabs .headers {
@@ -15,10 +16,12 @@
 }
 
 .tabs .headers h2.active {
-  background: #cccccc;
+  background: #888888;
+  color: white;
 }
 
 .tabs .tab {
   display: none;
+  padding: 0.2rem;
 }
 /*# sourceMappingURL=tabs.css.map */

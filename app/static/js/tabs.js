@@ -1,4 +1,3 @@
-import * as El from './modules/elements.js'
 (function () {
     console.log('tabs')
     let tabsContainer = document.getElementById('tabs')

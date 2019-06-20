@@ -1,8 +1,9 @@
 $tabs-header-bg-color: #f1f1f1;
-$tabs-header-active-bg-color: #cccccc;
+$tabs-header-active-bg-color: #888888;
 .tabs {
   border: 1px solid $tabs-header-bg-color;
   margin-top: 1rem;
+  padding: 0;
   .headers {
     background: $tabs-header-bg-color;
     h2 {
@@ -12,10 +13,12 @@ $tabs-header-active-bg-color: #cccccc;
       display: inline-block;
       &.active {
         background: $tabs-header-active-bg-color;
+        color: invert($color: #000000);
       }
     }
   }
   .tab {
     display: none;
+    padding: 0.2rem;
   }
 }

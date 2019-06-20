@@ -19,7 +19,6 @@ div.container {
   @media (min-width: $breakpoint-mobile) {
     width: 72%;
   }
-  /*background: #f0f0f0;*/
   margin: 0 auto;
   header {
     background: #3804f7;
@@ -27,6 +26,13 @@ div.container {
     color: #f0f0f0;
     h1 {
       margin: 0;
+      display: inline-block;
+    }
+    .version {
+      float: right;
+      vertical-align: middle;
+      padding: 0.5rem 0;
+      color: #b6fa49;
     }
   }
   section {
