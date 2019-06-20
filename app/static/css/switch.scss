@@ -1,12 +1,12 @@
 $switch-size: 1.2rem;
 $label-length: 4rem;
 $off-pos: 50%;
-$on-pos: 16%;
+$on-pos: 18%;
 $color-wrap-bg: transparent;
-$color-on-label-bg: #a472ea;
-$color-on-switch-bg: #6200ee;
-$color-off-label-bg: #9b9b9b;
-$color-off-switch-bg: #ffbe33;
+$color-on-label-bg: #ffbe33;
+$color-on-switch-bg: #cfcfcf;
+$color-off-label-bg: $color-on-switch-bg;
+$color-off-switch-bg: $color-on-label-bg;
 #switch-wrap {
   display: inline-block;
   label {
@@ -27,7 +27,6 @@ $color-off-switch-bg: #ffbe33;
         position: relative;
         display: inline-block;
         &.text {
-          color: #f0f0f0;
           &:before {
             content: "ENG";
             font-size: 80%;

@@ -18,17 +18,24 @@ let addNewMenu = (menu) => {
     editMenu(newMenu, menu)
 }
 
-let setRoot = (root) => {
+export let setRoot = (root) => {
     ROOT = root
 }
-let getMenu = (menu) => menu.menus.filter(m => m.id === selectedId)[0]
+let deleteFrom = (menu) => {
+    menu.menus = menu.menus.filter(m => m.id !== selectedId)
+    renderRoot(menu)
+}
 let toolbarBtn = (cls, cb) => {
     let btn = El.crEl('button', `btn ${cls}`)
     btn.innerHTML = `<img src="static/img/${cls}_icon_256.png"/>`
     btn.addEventListener('click', cb)
     return btn
 }
-let renderRoot = (otherMenu) => {
+let switchLang = (e, menu) => {
+    langValue = e.target.checked ? 'eng' : 'swa'
+    renderRoot(menu)
+}
+export let renderRoot = (otherMenu) => {
     let menu = otherMenu || ROOT
     let editor = El.emptyElementById('editor')
     let menuLabel = El.crEl('div', 'menu-label')
@@ -41,10 +48,7 @@ let renderRoot = (otherMenu) => {
     check.type = 'checkbox'
     check.id = 'lang'
     check.checked = langValue === 'eng'
-    check.addEventListener('change', (e) => {
-        langValue = e.target.checked ? 'eng' : 'swa'
-        renderRoot(menu)
-    })
+    check.addEventListener('change', (e) => switchLang(e, menu))
     let langLabel = El.crEl('label')
     langLabel.setAttribute('for', 'lang')
     langLabel.addEls([El.crEl('span', 'text'), El.crEl('span', 'switch')])
@@ -56,7 +60,7 @@ let renderRoot = (otherMenu) => {
     let btnBack = toolbarBtn('back', () => renderRoot(menuStack.pop()))
     btnBack.disabled = menuStack.length === 0
     let btnAdd = toolbarBtn('add', () => addNewMenu(menu))
-    let btnDel = toolbarBtn('delete', () => console.log('Delete', getMenu(menu)))
+    let btnDel = toolbarBtn('delete', () => deleteFrom(menu))
     btnDel.disabled = !selectedId
     let btnSave = toolbarBtn('save', () => menuUtils.saveMenu(ROOT))
     let btnExport = toolbarBtn('export', () => menuUtils.exportMenu())
@@ -82,7 +86,7 @@ let formControls = (parent, form, menu, temp) => El.crContrs([{
         renderRoot(parent)
     }
 }])
-let editMenu = (menu, parent) => {
+export let editMenu = (menu, parent) => {
     let form = El.emptyElementById('overlay')
     form.style.display = 'block';
     let wrap = El.crEl('div', 'form-wrap')
@@ -120,7 +124,7 @@ let nextMenu = (m, menu) => {
     selectedId = 0
     renderRoot(m)
 }
-let renderMenu = (menu) => {
+export let renderMenu = (menu) => {
     menu = sortMenus(menu)
     let editor = document.getElementById('editor')
     if (menu.menus.length) {
@@ -165,10 +169,3 @@ let renderMenu = (menu) => {
         editor.appendChild(line)
     }
 };
-
-export {
-    setRoot,
-    renderRoot,
-    renderMenu,
-    editMenu
-}
