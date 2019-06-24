@@ -1,55 +1,3 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-
-body {
-  background: #ffffff;
-}
-
-p {
-  margin: 0;
-}
-
-div.container {
-  margin: 0 auto;
-}
-
-@media (min-width: 920px) {
-  div.container {
-    width: 72%;
-  }
-}
-
-div.container header {
-  background: #3804f7;
-  padding: 0.2rem 0.75rem;
-  color: #f0f0f0;
-}
-
-div.container header h1 {
-  margin: 0;
-  display: inline-block;
-}
-
-div.container header .version {
-  float: right;
-  vertical-align: middle;
-  padding: 0.5rem 0;
-  color: #b6fa49;
-}
-
-div.container section .version {
-  display: block;
-  color: #333;
-  font-size: 0.8rem;
-  padding: 0.5rem 1rem;
-  text-align: center;
-}
-
 .editor-wrap #menu {
   padding: 0.5rem;
   text-align: center;
@@ -111,6 +59,10 @@ div.container section .version {
   float: right;
 }
 
+.editor-wrap #menu #editor .topbar button.btn:enabled {
+  cursor: pointer;
+}
+
 .editor-wrap #menu #editor .topbar button.btn:disabled {
   opacity: 0.5;
 }
@@ -132,12 +84,15 @@ div.container section .version {
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left;
-  padding: 0.2rem;
+  padding: 0 0.2rem;
   background: #ffffff;
-  margin-bottom: 1px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.editor-wrap #menu #editor .option:not(:last-child) {
+  margin-top: 1px;
 }
 
 .editor-wrap #menu #editor .option.active {
@@ -148,6 +103,34 @@ div.container section .version {
   background: #ccc;
 }
 
+.editor-wrap #menu #editor .option .settings {
+  display: inline-block;
+  margin-right: 0.2rem;
+}
+
+.editor-wrap #menu #editor .option .settings button {
+  border: 1px solid grey;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.editor-wrap #menu #editor .option .settings button.btn {
+  margin-left: 4px;
+}
+
+.editor-wrap #menu #editor .option .settings button.btn:enabled {
+  cursor: pointer;
+}
+
+.editor-wrap #menu #editor .option .settings button.btn:disabled {
+  opacity: 0.5;
+}
+
+.editor-wrap #menu #editor .option .settings button.btn img {
+  width: 10px;
+}
+
 .editor-wrap #menu #editor .option span {
   padding: 0.2rem;
   text-align: left;
@@ -155,6 +138,7 @@ div.container section .version {
 
 .editor-wrap #menu #editor .option span.num {
   width: 1.2rem;
+  border-left: 1px solid #e6e6e6;
 }
 
 .editor-wrap #menu #editor .option span.text {
@@ -164,6 +148,10 @@ div.container section .version {
   text-align: left;
 }
 
+.editor-wrap #menu #editor .option span.arrow {
+  border-left: 1px solid #e6e6e6;
+}
+
 .editor-wrap #menu #editor .option span.arrow i {
   border: solid #ccc;
   border-width: 0 1.2px 1.2px 0;
@@ -171,11 +159,21 @@ div.container section .version {
   padding: 3px;
   width: 0.2rem;
   height: 0.2rem;
-  margin: auto 1rem;
+  margin: auto 0.4rem;
 }
 
 .editor-wrap #menu #editor .option span.arrow i.right {
   transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.editor-wrap #menu #editor .option span.arrow i.up {
+  transform: rotate(0deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.editor-wrap #menu #editor .option span.arrow i.down {
+  transform: rotate(180deg);
   -webkit-transform: rotate(-45deg);
 }
 

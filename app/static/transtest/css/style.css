@@ -1,0 +1,216 @@
+#test {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: solid 1px #f9f9f9;
+  overflow-x: auto;
+}
+
+#test div.input-group {
+  padding-bottom: 0.5rem;
+}
+
+#test div.input-group label {
+  font-weight: bold;
+}
+
+#test div.input-group label input {
+  display: block;
+  min-width: 14rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+
+#test div.input-group label select {
+  display: block;
+  min-width: 14rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: 1px solid #680467;
+}
+
+#test div.input-group label select#service {
+  width: 100%;
+  background: #fafafa;
+}
+
+#test .mandatory-info {
+  color: #993333;
+  margin-top: 1rem;
+  font-size: 80%;
+  padding: 0.1rem;
+}
+
+#test .request {
+  background: #e6e6e6;
+}
+
+@media (min-width: 920px) {
+  #test .request {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: auto auto;
+        grid-template-columns: auto auto;
+    grid-column-gap: 1rem;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+}
+
+#test .request div {
+  display: inline-block;
+}
+
+#test .request div.params {
+  padding: 0.5rem;
+}
+
+#test .request div.params div {
+  display: block;
+}
+
+#test .request div.xml {
+  padding: 0.5rem;
+}
+
+#test .request div.xml textarea {
+  background: #f0f0f0;
+  color: #3804f7;
+  white-space: pre;
+  padding: 0.5rem;
+  resize: none;
+  border-radius: 4px;
+  border-color: #ccc;
+}
+
+#test div.controls {
+  padding: 0.5rem 0.5rem;
+  background: #e6e6e6;
+  border-top: 1px solid #ccc;
+}
+
+#test div.controls button {
+  border: 1px solid grey;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  border-color: #ccc;
+}
+
+#test div.controls button#execute {
+  background: #3804f7;
+  color: #b6fa49;
+}
+
+#test div.controls button#reset {
+  background: #f0f0f0;
+}
+
+#test div.result p:before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin: 0 6px 0 0;
+}
+
+#test div.result p {
+  background: #380467;
+  padding: 0.5rem;
+}
+
+#test div.result p.success {
+  color: #33ff33;
+}
+
+#test div.result p.success:before {
+  background: url("../img/success_20.png") no-repeat;
+}
+
+#test div.result p.fail {
+  color: #ff3333;
+}
+
+#test div.result p.fail:before {
+  background: url("../img/error_20.png") no-repeat;
+}
+
+#overlay {
+  position: fixed;
+  /* Sit on top of the page content */
+  display: none;
+  /* Hidden by default */
+  width: 100%;
+  /* Full width (cover the whole page) */
+  height: 100%;
+  /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Black background with opacity */
+  z-index: 2;
+  /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer;
+  /* Add a pointer on hover */
+}
+
+#overlay img.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+table.table {
+  width: 100%;
+  text-align: left;
+}
+
+table.table tr {
+  color: #ff3333;
+}
+
+table.table tr th {
+  background: #333;
+  color: #f8ff99;
+  padding: 0.2rem;
+}
+
+table.table tr.success {
+  color: #0de70d;
+}
+
+table.table .tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+table.table .tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200%;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  font-size: 72%;
+}
+
+table.table .tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+/*# sourceMappingURL=style.css.map */

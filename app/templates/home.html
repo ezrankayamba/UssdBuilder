@@ -11,15 +11,11 @@
     <title>Tigo Pesa Tools</title>
     <link
       rel="stylesheet"
-      href="{{url_for('static', filename='css/style.css')}}"
+      href="{{url_for('static', filename='css/tabs.css')}}"
     />
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='css/switch.css')}}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static', filename='css/tabs.css')}}"
     />
   </head>
 
@@ -45,7 +41,34 @@
         </div>
         <div class="tab" id="trans-test">
           <section>
-            <p>Trans test</p>
+            <form action="#" method="post" id="form">
+              <div id="test">
+                <div class="input-group">
+                  <label for="service">
+                    Select Service
+                    <select name="service" id="service"> </select>
+                  </label>
+                </div>
+                <p class="mandatory-info">
+                  All fields marked with (*) are mandatory
+                </p>
+                <div class="request">
+                  <div class="params" id="serviceParams"></div>
+                  <div class="xml">
+                    <textarea name="xml" id="xmlData" readonly></textarea>
+                  </div>
+                </div>
+                <div class="controls">
+                  <button id="reset">
+                    Reset
+                  </button>
+                  <button id="execute" type="submit">
+                    Execute API Call
+                  </button>
+                </div>
+                <div class="result" id="result"></div>
+              </div>
+            </form>
           </section>
         </div>
       </div>
@@ -54,10 +77,6 @@
     <script
       type="module"
       src="{{url_for('static', filename='js/app.js')}}"
-    ></script>
-    <script
-      type="module"
-      src="{{url_for('static', filename='js/tabs.js')}}"
     ></script>
   </body>
 </html>

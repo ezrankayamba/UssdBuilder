@@ -5,18 +5,18 @@ import {
     renderRoot
 } from './menu-view.js'
 
-let saveMenu = (ROOT) => {
+export let saveMenu = (ROOT) => {
     console.log("Saving menu ...", ROOT);
     Api.saveMenu(ROOT, (success, data) => {
         console.log(data);
         renderRoot(ROOT)
     });
 }
-let exportMenu = () => {
+export let exportMenu = () => {
     console.log('Export')
     var form = document.createElement("form");
     form.method = "GET";
-    form.action = "/export_menu";
+    form.action = "/mbuilder/export_menu";
     var tm = document.createElement("input");
     tm.value = Date.now();
     tm.name = "tm";
@@ -28,17 +28,10 @@ let exportMenu = () => {
 const idTracker = {
     id: 0
 }
-let getSn = () => {
+export let getSn = () => {
     idTracker.id = idTracker.id + 1;
     return idTracker.id;
 }
-let setSn = (id) => {
+export let setSn = (id) => {
     idTracker.id = id;
-}
-
-export {
-    saveMenu,
-    exportMenu,
-    getSn,
-    setSn
 }

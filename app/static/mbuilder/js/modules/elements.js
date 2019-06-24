@@ -1,4 +1,4 @@
-let crContrs = (buttons) => {
+export let crContrs = (buttons) => {
     let controls = crEl('div', 'controls');
     buttons.forEach((btn) => {
         let tmp = crEl('button')
@@ -14,7 +14,7 @@ let addEls = function (childs) {
         this.appendChild(c)
     })
 }
-let crEl = (type, cls, text) => {
+export let crEl = (type, cls, text) => {
     let el = document.createElement(type);
     if (cls) {
         el.className = cls
@@ -27,7 +27,7 @@ let crEl = (type, cls, text) => {
 }
 
 
-let crInput = (type, lbl, onChange, value, options) => {
+export let crInput = (type, lbl, onChange, value, options) => {
     let wrap = crEl('div', 'input-wrap')
     let label = crEl('label')
     label.textContent = `${lbl}: `
@@ -59,22 +59,13 @@ let crInput = (type, lbl, onChange, value, options) => {
     wrap.appendChild(label)
     return wrap
 }
-let emptyElement = (el) => {
+export let emptyElement = (el) => {
     while (el.firstChild) {
         el.removeChild(el.firstChild);
     }
     return el;
 }
-let emptyElementById = (id) => {
+export let emptyElementById = (id) => {
     var el = document.getElementById(id);
     return emptyElement(el)
-}
-
-
-export {
-    crContrs,
-    emptyElementById,
-    emptyElement,
-    crEl,
-    crInput
 }

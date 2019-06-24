@@ -1,4 +1,3 @@
-let uniqueId = 0;
 class Menu {
   constructor(orderNo = 1, menus = [], name = "ROOT") {
     this.orderNo = orderNo;
@@ -11,7 +10,7 @@ class Menu {
 
 class Api {
   static fetchMenu(cb) {
-    const URL = "/get_menu";
+    const URL = "/mbuilder/get_menu";
     const params = {
       headers: {
         "Accept": "text/json"
@@ -31,7 +30,7 @@ class Api {
       });
   }
   static saveMenu(ROOT, cb) {
-    const URL = "/update_menu";
+    const URL = "/mbuilder/update_menu";
     const params = {
       headers: {
         "Content-Type": "application/json"
